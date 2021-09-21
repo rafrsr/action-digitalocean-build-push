@@ -1,0 +1,32 @@
+name: 'Build Image'
+description: 'Build Image and push to Digital Ocean Repository'
+inputs:
+  tag:
+    description: 'Image tag'
+    required: true
+    default: $(echo $GITHUB_SHA | head -c7)
+  accessToken:
+    description: 'Digital Ocean API Access Token'
+    required: true
+  repository:
+    description: 'Digital Ocean Repository'
+    required: true    
+runs:
+  using: "composite"
+  steps:
+      - name: Build container image
+        run: docker build -t registry.digitalocean.com/${{ inputs.repository }}:${{ inputs.tag }} .
+        shell: bash
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ inputs.accessToken }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1200
+        shell: bash
+
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/${{ inputs.repository }}:${{ inputs.tag }}
+        shell: bash
