@@ -7,6 +7,9 @@ inputs:
   repository:
     description: 'Digital Ocean Repository'
     required: true    
+  tag:
+    description: 'Tag to use'
+    tag: ${{ steps.short-sha.outputs.sha }}
 runs:
   using: "composite"
   steps:
@@ -14,7 +17,7 @@ runs:
         id: short-sha
         
       - name: Build container image
-        run: docker build -t registry.digitalocean.com/${{ inputs.repository }}:${{ steps.short-sha.outputs.sha }} .
+        run: docker build -t registry.digitalocean.com/${{ inputs.repository }}:${{ inputs.tag }} .
         shell: bash
 
       - name: Install doctl
@@ -27,5 +30,5 @@ runs:
         shell: bash
 
       - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/${{ inputs.repository }}:${{ steps.short-sha.outputs.sha }}
+        run: docker push registry.digitalocean.com/${{ inputs.repository }}:${{ inputs.tag }}
         shell: bash
