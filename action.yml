@@ -10,6 +10,7 @@ inputs:
   tag:
     description: 'Tag to use'
   workingDirectory:
+    default: .
 runs:
   using: "composite"
   steps:
