@@ -9,6 +9,7 @@ inputs:
     required: true    
   tag:
     description: 'Tag to use'
+  workingDirectory:
 runs:
   using: "composite"
   steps:
@@ -27,7 +28,9 @@ runs:
       - name: Build container image
         run: docker build -t registry.digitalocean.com/${{ inputs.repository }}:${{ inputs.tag || steps.short-sha.outputs.sha }} .
         shell: bash
+        working-directory: ${{ inputs.workingDirectory }}
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/${{ inputs.repository }}:${{ inputs.tag || steps.short-sha.outputs.sha }}
         shell: bash
+        working-directory: ${{ inputs.workingDirectory }}
