@@ -23,7 +23,7 @@ runs:
         run: doctl registry login --expiry-seconds 1200
         shell: bash
         
-      - uses: benjlevesque/short-sha@v1.2
+      - uses: benjlevesque/short-sha@v3.0
         id: short-sha         
         
       - name: Build container image
